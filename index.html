@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Isekai Idle - Otherworldly Progress</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0e0f1a;
+      --panel: #16192a;
+      --panel-2: #1d2036;
+      --text: #f3f5ff;
+      --muted: #a6accd;
+      --accent: #7c5cff;
+      --accent-2: #38d9a9;
+      --danger: #ff6b6b;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #1f2240, #0b0c14 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 8px 0 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 320px) 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      letter-spacing: 0.03em;
+    }
+
+    .stats {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stat {
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .stat strong {
+      font-size: 1.05rem;
+    }
+
+    .bars {
+      height: 8px;
+      border-radius: 999px;
+      background: #2a2f4f;
+      overflow: hidden;
+    }
+
+    .bars span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      width: 0;
+      transition: width 0.2s ease;
+    }
+
+    .actions {
+      display: grid;
+      gap: 14px;
+    }
+
+    .action {
+      background: var(--panel-2);
+      border-radius: 14px;
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .action header {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .action button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      background: var(--accent);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .action button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(124, 92, 255, 0.35);
+    }
+
+    .action button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      background: #4b4f6a;
+      box-shadow: none;
+    }
+
+    .action .details {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .log {
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 0.92rem;
+      display: grid;
+      gap: 8px;
+    }
+
+    .log p {
+      margin: 0;
+    }
+
+    .log .highlight {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    .footer {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(124, 92, 255, 0.2);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 20px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Isekai Idle: Otherworldly Progress</h1>
+      <p class="subtitle">You awaken in an enchanted realm. Grow stronger by using skills and building your fate.</p>
+    </div>
+    <div class="badge" id="realmTitle">Realm Rank: Novice Wanderer</div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <h2>Hero Status</h2>
+      <div class="stats" id="heroStats"></div>
+      <div class="footer">
+        <div>Mana: <span id="mana">0</span></div>
+        <div>Stamina: <span id="stamina">0</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Daily Actions</h2>
+      <div class="actions" id="actions"></div>
+      <h2>World Chronicle</h2>
+      <div class="log" id="log"></div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      mana: 25,
+      stamina: 25,
+      realmRankIndex: 0,
+      essence: 0,
+      skills: {
+        swordplay: { name: "Swordplay", level: 1, xp: 0, xpToNext: 50 },
+        woodcraft: { name: "Woodcraft", level: 1, xp: 0, xpToNext: 35 },
+        arcana: { name: "Arcana", level: 1, xp: 0, xpToNext: 60 },
+        alchemy: { name: "Alchemy", level: 1, xp: 0, xpToNext: 45 },
+        diplomacy: { name: "Diplomacy", level: 1, xp: 0, xpToNext: 40 }
+      }
+    };
+
+    const realmRanks = [
+      "Novice Wanderer",
+      "Spirit-bound Disciple",
+      "Blessed Adventurer",
+      "Mana-Linked Champion",
+      "Legend of the Fifth Realm"
+    ];
+
+    const actions = [
+      {
+        id: "train-sword",
+        label: "Practice Blade Forms",
+        detail: "Gain Swordplay XP and essence.",
+        staminaCost: 4,
+        manaCost: 0,
+        reward: () => gainXp("swordplay", 12)
+      },
+      {
+        id: "gather-wood",
+        label: "Harvest Spiritwood",
+        detail: "Gather woodcraft XP and restore stamina.",
+        staminaCost: 3,
+        manaCost: 0,
+        reward: () => {
+          gainXp("woodcraft", 10);
+          state.stamina = Math.min(100, state.stamina + 6);
+          addLog("The spiritwood whispers, restoring your stamina.");
+        }
+      },
+      {
+        id: "study-arcana",
+        label: "Study Arcane Runes",
+        detail: "Gain Arcana XP at the cost of mana.",
+        staminaCost: 2,
+        manaCost: 6,
+        reward: () => gainXp("arcana", 15)
+      },
+      {
+        id: "brew-elixir",
+        label: "Brew a Minor Elixir",
+        detail: "Gain Alchemy XP and regenerate mana.",
+        staminaCost: 2,
+        manaCost: 2,
+        reward: () => {
+          gainXp("alchemy", 11);
+          state.mana = Math.min(100, state.mana + 8);
+          addLog("The elixir sparkles, refilling your mana reserves.");
+        }
+      },
+      {
+        id: "meet-folk",
+        label: "Meet Village Elders",
+        detail: "Gain Diplomacy XP and earn essence.",
+        staminaCost: 1,
+        manaCost: 1,
+        reward: () => {
+          gainXp("diplomacy", 9);
+          state.essence += 5;
+        }
+      }
+    ];
+
+    const heroStats = document.getElementById("heroStats");
+    const actionsEl = document.getElementById("actions");
+    const logEl = document.getElementById("log");
+    const manaEl = document.getElementById("mana");
+    const staminaEl = document.getElementById("stamina");
+    const realmTitleEl = document.getElementById("realmTitle");
+
+    function init() {
+      renderStats();
+      renderActions();
+      addLog("You arrive in the Fifth Realm with only a whisper of power.");
+      tickResources();
+      setInterval(tickResources, 4000);
+    }
+
+    function renderStats() {
+      heroStats.innerHTML = "";
+      Object.values(state.skills).forEach((skill) => {
+        const stat = document.createElement("div");
+        stat.className = "stat";
+        stat.innerHTML = `
+          <strong>${skill.name} Lv. ${skill.level}</strong>
+          <span>${skill.xp} / ${skill.xpToNext} mastery</span>
+          <div class="bars"><span style="width: ${(skill.xp / skill.xpToNext) * 100}%"></span></div>
+        `;
+        heroStats.appendChild(stat);
+      });
+      manaEl.textContent = state.mana;
+      staminaEl.textContent = state.stamina;
+      updateRealmRank();
+    }
+
+    function renderActions() {
+      actionsEl.innerHTML = "";
+      actions.forEach((action) => {
+        const card = document.createElement("div");
+        card.className = "action";
+        const button = document.createElement("button");
+        button.textContent = action.label;
+        button.addEventListener("click", () => handleAction(action));
+
+        const header = document.createElement("header");
+        header.appendChild(document.createElement("strong")).textContent = action.label;
+        header.appendChild(button);
+
+        const details = document.createElement("div");
+        details.className = "details";
+        details.textContent = `${action.detail} (Cost: ${action.staminaCost} stamina / ${action.manaCost} mana)`;
+
+        card.appendChild(header);
+        card.appendChild(details);
+        actionsEl.appendChild(card);
+      });
+      updateActionButtons();
+    }
+
+    function updateActionButtons() {
+      document.querySelectorAll(".action").forEach((card, index) => {
+        const action = actions[index];
+        const button = card.querySelector("button");
+        button.disabled = state.stamina < action.staminaCost || state.mana < action.manaCost;
+      });
+    }
+
+    function handleAction(action) {
+      if (state.stamina < action.staminaCost || state.mana < action.manaCost) {
+        addLog("You lack the energy to complete that task.", true);
+        return;
+      }
+      state.stamina -= action.staminaCost;
+      state.mana -= action.manaCost;
+      action.reward();
+      state.essence += 3;
+      addLog(`You completed: ${action.label}.`);
+      renderStats();
+      updateActionButtons();
+    }
+
+    function gainXp(skillKey, amount) {
+      const skill = state.skills[skillKey];
+      skill.xp += amount;
+      if (skill.xp >= skill.xpToNext) {
+        skill.xp -= skill.xpToNext;
+        skill.level += 1;
+        skill.xpToNext = Math.round(skill.xpToNext * 1.25);
+        addLog(`${skill.name} reaches level ${skill.level}!`, true);
+        state.essence += 10;
+      }
+    }
+
+    function updateRealmRank() {
+      const totalLevels = Object.values(state.skills).reduce((sum, skill) => sum + skill.level, 0);
+      const rankIndex = Math.min(realmRanks.length - 1, Math.floor(totalLevels / 6));
+      if (rankIndex !== state.realmRankIndex) {
+        state.realmRankIndex = rankIndex;
+        addLog(`Your aura shifts: ${realmRanks[rankIndex]} achieved.`, true);
+      }
+      realmTitleEl.textContent = `Realm Rank: ${realmRanks[rankIndex]} | Essence ${state.essence}`;
+    }
+
+    function tickResources() {
+      state.mana = Math.min(100, state.mana + 4);
+      state.stamina = Math.min(100, state.stamina + 5);
+      if (Math.random() > 0.6) {
+        const events = [
+          "A shrine glows faintly, gifting you inspiration.",
+          "A spirit beast watches over you, calming your heart.",
+          "A traveling mage shares a trick for focusing mana."
+        ];
+        addLog(events[Math.floor(Math.random() * events.length)]);
+      }
+      renderStats();
+      updateActionButtons();
+    }
+
+    function addLog(message, highlight = false) {
+      const entry = document.createElement("p");
+      entry.textContent = message;
+      if (highlight) {
+        entry.classList.add("highlight");
+      }
+      logEl.prepend(entry);
+      const entries = logEl.querySelectorAll("p");
+      if (entries.length > 12) {
+        entries[entries.length - 1].remove();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
