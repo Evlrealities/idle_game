@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Idle Workshop</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <h1>Idle Workshop</h1>
+        <p class="subtitle">Build up your workshop and watch the gears turn.</p>
+      </header>
+
+      <section class="stats">
+        <div class="stat">
+          <span class="label">Currency</span>
+          <span id="currency" class="value">0</span>
+        </div>
+        <div class="stat">
+          <span class="label">DPS</span>
+          <span id="per-second" class="value">0</span>
+        </div>
+      </section>
+
+      <section class="controls">
+        <button id="buy-1" class="btn">Buy 1</button>
+        <button id="buy-10" class="btn">Buy 10</button>
+        <button id="attack-monster" class="btn secondary">Attack</button>
+      </section>
+
+      <section class="monster">
+        <div class="stat">
+          <span class="label">Monster</span>
+          <span id="monster-name" class="value">Level 1</span>
+        </div>
+        <div class="stat">
+          <span class="label">HP</span>
+          <span id="monster-hp" class="value">0 / 0</span>
+        </div>
+      </section>
+
+      <section id="generators" class="generators" aria-live="polite"></section>
+    </main>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
