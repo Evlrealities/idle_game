@@ -89,14 +89,6 @@ header {
   transform: translateY(-1px);
 }
 
-.btn.secondary {
-  background: #6b7280;
-}
-
-.btn.secondary:not(:disabled):hover {
-  background: #4b5563;
-}
-
 .generators {
   display: grid;
   gap: 16px;

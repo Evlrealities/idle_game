@@ -6,7 +6,6 @@ import {
 } from "./content.js";
 import { formatNumber } from "./format.js";
 import {
-  addGold,
   buy,
   getDerived,
   getGeneratorCost,
@@ -22,7 +21,6 @@ const perSecondEl = document.querySelector("#per-second");
 const generatorListEl = document.querySelector("#generators");
 const buyOneBtn = document.querySelector("#buy-1");
 const buyTenBtn = document.querySelector("#buy-10");
-const gatherGoldBtn = document.querySelector("#gather-gold");
 
 const BUY_OPTIONS = [1, 10];
 let selectedQuantity = 1;
@@ -36,10 +34,6 @@ function setSelectedQuantity(quantity) {
 
 buyOneBtn.addEventListener("click", () => setSelectedQuantity(1));
 buyTenBtn.addEventListener("click", () => setSelectedQuantity(10));
-gatherGoldBtn.addEventListener("click", () => {
-  addGold(1);
-  render();
-});
 
 function createGeneratorRow(generator) {
   const wrapper = document.createElement("article");

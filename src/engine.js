@@ -50,14 +50,6 @@ export function tick(dtSeconds) {
   state.currency += derived.perSecond * dtSeconds;
 }
 
-export function addGold(amount) {
-  const value = Number(amount);
-  if (!Number.isFinite(value) || value <= 0) {
-    return;
-  }
-  state.currency += value;
-}
-
 export function buy(id, quantity) {
   const gen = generatorIndex.get(id);
   if (!gen) {
