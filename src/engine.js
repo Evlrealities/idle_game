@@ -1,4 +1,5 @@
 import { GENERATORS, MONSTER } from "./content.js";
+import { GENERATORS } from "./content.js";
 
 const generatorIndex = new Map(GENERATORS.map((gen) => [gen.id, gen]));
 
@@ -76,6 +77,7 @@ export function getMonsterInfo() {
 
 export function dealDamage(amount) {
   applyDamage(amount);
+  state.currency += derived.perSecond * dtSeconds;
 }
 
 export function buy(id, quantity) {

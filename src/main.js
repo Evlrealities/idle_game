@@ -12,6 +12,9 @@ import {
   getGeneratorCost,
   getGeneratorProduction,
   getMonsterInfo,
+  getDerived,
+  getGeneratorCost,
+  getGeneratorProduction,
   getState,
   hydrate,
   tick,
@@ -26,6 +29,9 @@ const generatorListEl = document.querySelector("#generators");
 const buyOneBtn = document.querySelector("#buy-1");
 const buyTenBtn = document.querySelector("#buy-10");
 const attackBtn = document.querySelector("#attack-monster");
+const generatorListEl = document.querySelector("#generators");
+const buyOneBtn = document.querySelector("#buy-1");
+const buyTenBtn = document.querySelector("#buy-10");
 
 const BUY_OPTIONS = [1, 10];
 let selectedQuantity = 1;
@@ -97,6 +103,8 @@ function render() {
   monsterHpEl.textContent = `${formatNumber(monster.hp)} / ${formatNumber(
     monster.maxHp,
   )}`;
+  currencyEl.textContent = formatNumber(state.currency);
+  perSecondEl.textContent = formatNumber(derived.perSecond);
 
   for (const generator of GENERATORS) {
     const row = generatorRows.get(generator.id);
