@@ -68,6 +68,13 @@ header {
   margin-bottom: 24px;
 }
 
+.monster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
 .btn {
   border: none;
   border-radius: 999px;
@@ -87,6 +94,14 @@ header {
 .btn:not(:disabled):hover {
   background: #1755b8;
   transform: translateY(-1px);
+}
+
+.btn.secondary {
+  background: #6b7280;
+}
+
+.btn.secondary:not(:disabled):hover {
+  background: #4b5563;
 }
 
 .generators {

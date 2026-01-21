@@ -7,6 +7,11 @@ import {
 import { formatNumber } from "./format.js";
 import {
   buy,
+  dealDamage,
+  getDerived,
+  getGeneratorCost,
+  getGeneratorProduction,
+  getMonsterInfo,
   getDerived,
   getGeneratorCost,
   getGeneratorProduction,
@@ -18,6 +23,12 @@ import { loadGame, saveGame } from "./storage.js";
 
 const currencyEl = document.querySelector("#currency");
 const perSecondEl = document.querySelector("#per-second");
+const monsterNameEl = document.querySelector("#monster-name");
+const monsterHpEl = document.querySelector("#monster-hp");
+const generatorListEl = document.querySelector("#generators");
+const buyOneBtn = document.querySelector("#buy-1");
+const buyTenBtn = document.querySelector("#buy-10");
+const attackBtn = document.querySelector("#attack-monster");
 const generatorListEl = document.querySelector("#generators");
 const buyOneBtn = document.querySelector("#buy-1");
 const buyTenBtn = document.querySelector("#buy-10");
@@ -34,6 +45,10 @@ function setSelectedQuantity(quantity) {
 
 buyOneBtn.addEventListener("click", () => setSelectedQuantity(1));
 buyTenBtn.addEventListener("click", () => setSelectedQuantity(10));
+attackBtn.addEventListener("click", () => {
+  dealDamage(1);
+  render();
+});
 
 function createGeneratorRow(generator) {
   const wrapper = document.createElement("article");
@@ -81,6 +96,13 @@ for (const generator of GENERATORS) {
 function render() {
   const state = getState();
   const derived = getDerived();
+  const monster = getMonsterInfo();
+  currencyEl.textContent = formatNumber(state.currency);
+  perSecondEl.textContent = formatNumber(derived.perSecond);
+  monsterNameEl.textContent = `Level ${monster.level + 1}`;
+  monsterHpEl.textContent = `${formatNumber(monster.hp)} / ${formatNumber(
+    monster.maxHp,
+  )}`;
   currencyEl.textContent = formatNumber(state.currency);
   perSecondEl.textContent = formatNumber(derived.perSecond);
 

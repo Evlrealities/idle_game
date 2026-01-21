@@ -30,3 +30,10 @@ export const GENERATORS = [
     baseProduction: 18,
   },
 ];
+
+export const MONSTER = {
+  baseHp: 10,
+  hpGrowth: 1.25,
+  baseReward: 5,
+  rewardGrowth: 1.2,
+};
